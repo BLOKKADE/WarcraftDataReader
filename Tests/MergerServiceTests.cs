@@ -53,11 +53,9 @@ public sealed class MergerServiceTests
         TestTxtObjects();
         TestDataObject();
 
-        mergerService.MergeObjects();
-
-        var mergedObject = mergerService.Wc3Data;
+        var mergedObject = mergerService.MergeObjects();
 
         // Convert to json
-        File.WriteAllText("Data/Everything.json", JsonSerializer.Serialize(mergerService.Wc3Data));
+        File.WriteAllText("Data/Everything.json", JsonSerializer.Serialize(mergedObject));
     }
 }

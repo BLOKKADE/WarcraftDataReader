@@ -28,7 +28,7 @@ public static class TxtMapper
 
                 if (trimmedLine.StartsWith('[') && trimmedLine.EndsWith(']'))
                 {
-                    currentObject = new Objects.MappedObject { Code = trimmedLine.Trim('[', ']') };
+                    currentObject = new MappedObject { Code = trimmedLine.Trim('[', ']') };
                     result.Add(currentObject);
                 }
                 else if (currentObject != null)
