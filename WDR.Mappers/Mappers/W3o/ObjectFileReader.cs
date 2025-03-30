@@ -13,9 +13,9 @@ public enum ObjectType
     Upgrades
 }
 
-public static class ObjectTranslator
+public static class ObjectFileReader
 {
-    public static Wc3Data WarToJson(byte[] buffer, ObjectType type)
+    public static Wc3Data FromBuffer(byte[] buffer, ObjectType type)
     {
         var result = new Wc3Data();
         var outBufferToJSON = new W3Buffer(buffer);

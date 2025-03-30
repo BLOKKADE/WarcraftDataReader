@@ -6,8 +6,14 @@ namespace WDR.Tests;
 public sealed class War2JsonTests
 {
     [TestMethod]
-    public void TestAbilities()
+    public void Testw3a()
     {
-        var result = War2JsonService.ProcessFile("Data/war3map.w3a", ObjectType.Abilities);
+        var result = ObjectFileReader.FromBuffer(File.ReadAllBytes("Data/war3map.w3a"), ObjectType.Abilities);
+    }
+
+    [TestMethod]
+    public void Testw3aSkin()
+    {
+        var result = ObjectFileReader.FromBuffer(File.ReadAllBytes("Data/war3mapSkin.w3a"), ObjectType.Abilities);
     }
 }

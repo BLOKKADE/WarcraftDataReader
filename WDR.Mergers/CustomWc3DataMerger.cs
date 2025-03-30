@@ -2,73 +2,57 @@
 
 namespace WDR.Mergers;
 
-public static partial class CustomWc3DataMerger
+public static class CustomWc3DataMerger
 {
-    public static Wc3Data ExpandCustomData(Wc3Data defaultData, Wc3Data customData)
+    public static Wc3Data Expand(Wc3Data targetData, Wc3Data sourceData)
     {
-        foreach (var origObj in defaultData.Original)
-        {
-
-            var customOriginalObj = customData.Original.SingleOrDefault(x => x.Code == origObj.Code);
-            var customCustomObjs = customData.Custom.Where(x => x.OriginalCode == origObj.Code);
-
-            // if  the original object is not edited in the custom data then add it
-            if (customOriginalObj == null)
-            {
-                customData.Original.Add(origObj);
-            }
-            else
-            {
-                // if found then add all fields not edited in the custom data
-                Merge(origObj, customOriginalObj);
-            }
-
-            if (customCustomObjs.Any(x => x.Code == "A0DX"))
-            {
-                var test = 1;
-                var stri = test.ToString();
-            }
-
-            // add all unedited fields from the original obj to all custom objects based on it
-            foreach (var obj in customCustomObjs)
-            {
-                Merge(origObj, obj);
-            }
-        }
-
-        return customData;
+        ExpandList(targetData.Original, sourceData.Original);
+        ExpandList(targetData.Custom, sourceData.Custom);
+        return targetData;
     }
 
-    // Goes through each field in the default data and adds it to the customdata if missing
-    // Also adds the field name if it is missing, for easier lookup
-    private static void Merge(Wc3Object defaultData, Wc3Object customData)
+    private static void ExpandList(List<Wc3Object> targetList, List<Wc3Object> sourceList)
     {
-        foreach (var defaultField in defaultData.Fields)
+        foreach (var sourceObject in sourceList)
         {
-            var customField = customData.Fields.Where(x => x.Id == defaultField.Id);
-            if (customField?.Any() != true)
+            var targetObjects = targetList.Where(x => x.Code == sourceObject.Code);
+            // if  the original object is not edited in the custom data then add it
+            if (targetObjects == null)
             {
-                customData.Fields.Add(defaultField);
+                targetList.Add(sourceObject);
             }
             else
             {
-                foreach (var field in customField)
+                // add all unedited fields from the original obj to all custom objects based on it
+                foreach (var targetObject in targetObjects)
                 {
-                    if (defaultField.FieldName != null && field.Level != 0)
-                    {
-                        var match = FieldNameRegex().Match(defaultField.FieldName);
-                        if (match.Success)
-                        {
-                            var namePart = match.Groups[1].Value;
-                            field.FieldName = $"{namePart}{field.Level}";
-                        }
-                    }
-                    field.FieldName ??= defaultField.FieldName;
+                    Merge(targetObject, sourceObject);
                 }
             }
         }
     }
 
-    [System.Text.RegularExpressions.GeneratedRegex(@"^(.*?)(\d+)$")]
-    private static partial System.Text.RegularExpressions.Regex FieldNameRegex();
+    // Goes through each field in the default data and adds it to the customdata if missing
+    private static void Merge(Wc3Object targetObject, Wc3Object sourceObject)
+    {
+        var maxLevel = int.TryParse(targetObject.Fields.SingleOrDefault(x => x.Id == "alev")?.Value?.ToString(), out var level) ? level : 0;
+
+        foreach (var sourceField in sourceObject.Fields)
+        {
+            if (sourceField.Level > maxLevel)
+            {
+                continue;
+            }
+
+            var targetField = targetObject.Fields.Where(x => x.Id == sourceField.Id && x.Level == sourceField.Level);
+            if (targetField?.Any() != true)
+            {
+                targetObject.Fields.Add(sourceField);
+            }
+            else
+            {
+                continue;
+            }
+        }
+    }
 }

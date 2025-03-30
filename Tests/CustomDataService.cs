@@ -27,11 +27,15 @@ public sealed class CustomDataService
             mergerService.ReadData(file);
         }
 
-        var customData = War2JsonService.ProcessFile("Data/war3map.w3a", ObjectType.Abilities);
+        var customAbilityData = ObjectFileReader.FromBuffer(File.ReadAllBytes("Data/war3map.w3a"), ObjectType.Abilities);
+        var customAbilitySkinData = ObjectFileReader.FromBuffer(File.ReadAllBytes("Data/war3mapSkin.w3a"), ObjectType.Abilities);
 
         var defaultData = mergerService.MergeObjects();
 
-        var expCustomData = CustomWc3DataMerger.ExpandCustomData(defaultData, customData);
+        //expand custom data
+        var expCustomDataWSkin = CustomWc3DataMerger.Expand(customAbilityData, customAbilitySkinData);
+
+        var expCustomData = DefaultWc3DataMerger.Expand(expCustomDataWSkin, defaultData);
 
         //save to json file
         File.WriteAllText("Data/ExpandedCustomData.json", JsonSerializer.Serialize(expCustomData));
