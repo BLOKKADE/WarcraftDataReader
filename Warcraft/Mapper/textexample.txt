@@ -1,0 +1,30 @@
+﻿// Aerial Shackles
+[Amls]
+Buttonpos=0,2
+Order=magicleash
+
+// Aerial Shackles Caster
+[Bmlc]
+
+// Aerial Shackles Target
+[Bmlt]
+
+// area of effect detection (scry)
+[AHta]
+Requires=Rhse
+ButtonPos=0,2
+
+// Feedback
+[Afbk]
+Buttonpos=3,2
+
+// Feedback
+[Afbt]
+Buttonpos=3,2
+
+
+// Control Magic
+[Acmg]
+Requires=Rhss
+Buttonpos=1,2
+Order=controlmagic
