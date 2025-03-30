@@ -1,16 +1,18 @@
-﻿namespace Warcraft.Mapper;
+﻿using Warcraft.Models;
+
+namespace Warcraft.Mappers;
 public static class TxtMapper
 {
-    public static List<Objects.MappedObject> MapFromFile(string filePath)
+    public static List<MappedObject> MapFromFile(string filePath)
     {
         var fileContent = File.ReadAllText(filePath);
         return Map(fileContent);
     }
 
-    public static List<Objects.MappedObject> Map(string content)
+    public static List<MappedObject> Map(string content)
     {
-        var result = new List<Objects.MappedObject>();
-        Objects.MappedObject? currentObject = null;
+        var result = new List<MappedObject>();
+        MappedObject? currentObject = null;
 
         using (var reader = new StringReader(content))
         {

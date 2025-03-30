@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Warcraft.Sylk;
+namespace Warcraft.Mappers.Sylk;
 public class Sylk
 {
     public static Sylk FromStreams(params Stream[] streams)
@@ -35,11 +35,10 @@ public class Sylk
 
             switch (records.Dequeue())
             {
-                case "B": // size info
-                    /* we just ignore this, since the dictionary will scale automatically */
+                case "B":
                     break;
 
-                case "C": // data
+                case "C":
                     foreach (var record in records)
                     {
                         if (record.StartsWith('X'))
@@ -53,7 +52,7 @@ public class Sylk
                     }
                     break;
 
-                case "E": // exit?
+                case "E":
                     isRunning = false;
                     break;
             }

@@ -1,10 +1,10 @@
-﻿using Warcraft.Objects;
+﻿using Warcraft.Models;
 
-namespace Warcraft.Sylk;
+namespace Warcraft.Mappers.Sylk;
 
-public static class DynamicSylkMapper
+public static class SylkMapper
 {
-    public static List<MappedObject> MapToDynamicObjects(Sylk sylk)
+    public static List<MappedObject> Map(Sylk sylk)
     {
         List<MappedObject> mappedObjects = [];
         Dictionary<int, string> fieldNames = [];

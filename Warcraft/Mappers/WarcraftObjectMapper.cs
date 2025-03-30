@@ -1,24 +1,10 @@
-﻿using System.Text.Json;
-using Warcraft.Objects;
+﻿using Warcraft.Models;
 
-namespace Warcraft.Mapper;
+namespace Warcraft.Mappers;
 
 public static class WarcraftObjectMapper
 {
-    public static Warcraft3Object MapFromJson(string dataJsonPath, string metaJsonPath)
-    {
-        var tempJson = File.ReadAllText(dataJsonPath);
-        var metaJson = File.ReadAllText(metaJsonPath);
-
-        var tempObjects = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(tempJson)!;
-        var metaData = JsonSerializer.Deserialize<List<MetaData>>(metaJson)!;
-
-        var dataName = Path.GetFileNameWithoutExtension(dataJsonPath);
-
-        return MapJsonToWarcraft3Object(dataName, tempObjects, metaData);
-    }
-
-    public static Warcraft3Object MapJsonToWarcraft3Object(string source, List<Dictionary<string, string>> objectData, List<MetaData> metaData)
+    public static Wc3Data MapObjectsToWarcraftObject(string source, List<MappedObject> objectData, List<MetaData> metaData)
     {
         // Create a dictionary to group metadata by field
         // there can be duplicates in abilitymetadata
@@ -27,32 +13,19 @@ public static class WarcraftObjectMapper
             .GroupBy(m => m.Field)
             .ToDictionary(g => g.Key, g => g.ToList());
 
-        Warcraft3Object warcraft3Object = new();
+        Wc3Data warcraft3Object = new();
 
-        // Get the source identifier based on the source type
-        var sourceIdentifier = GetSourceIdentifier(source);
-
-        // Iterate through each object in the JSON data
         foreach (var tempObject in objectData)
         {
-            // Skip to the next object if the source identifier is not present
-            // should not happen!!!
-            if (!tempObject.ContainsKey(sourceIdentifier))
-            {
-                continue;
-            }
+            var wc3Obj = new Wc3Object() { Code = tempObject.Code, OriginalCode = tempObject.Code };
 
-            var code = tempObject[sourceIdentifier];
-            List<Warcraft3Field> fields = [];
-
-            foreach (var kvp in tempObject)
+            foreach (var kvp in tempObject.Fields)
             {
                 var fieldName = kvp.Key;
                 var fieldValue = kvp.Value;
 
                 // Check if the field name exists in the metadata dictionary
                 // If not, try removing trailing numbers from the field name
-                // e.g., "Field1" -> "Field", "Field12" -> "Field"
                 if (metaFieldDict.TryGetValue(fieldName, out var metaFields) ||
                     metaFieldDict.TryGetValue(RemoveTrailingNumbers(fieldName), out metaFields))
                 {
@@ -66,7 +39,7 @@ public static class WarcraftObjectMapper
                     {
                         // if metaFields explicitly contains the ability ID, use that
                         metaFields = [.. metaFields.OrderByDescending(m => m.AbilityId.Count)];
-                        metaField = metaFields.Find(m => m.AbilityId.Contains(code));
+                        metaField = metaFields.Find(m => m.AbilityId.Contains(wc3Obj.Code));
 
                         // if no ability ID was found, use the last field in the list
                         // last field usually contains a general code used by most abilities
@@ -93,11 +66,11 @@ public static class WarcraftObjectMapper
                         Level = level,
                         FieldName = fieldName
                     };
-                    fields.Add(warcraft3Field);
+                    wc3Obj.Fields.Add(warcraft3Field);
                 }
             }
 
-            warcraft3Object.Original[code] = fields;
+            warcraft3Object.Original.Add(wc3Obj);
         }
 
         return warcraft3Object;
@@ -113,20 +86,5 @@ public static class WarcraftObjectMapper
             i--;
         }
         return fieldName[..(i + 1)];
-    }
-
-    private static string GetSourceIdentifier(string source)
-    {
-        return source.ToLower() switch
-        {
-            "abilitydata" => "alias",
-            "unitui" => "unitUIID",
-            "unitweapons" => "unitWeaponID",
-            "itemdata" => "itemID",
-            "unitabilities" => "unitAbilID",
-            "unitbalance" => "unitBalanceID",
-            "unitdata" => "unitID",
-            _ => throw new ArgumentException("Invalid source identifier.")
-        };
     }
 }

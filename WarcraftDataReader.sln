@@ -9,12 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warcraft", "Warcraft\Warcra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{C36075CC-926F-4E52-AE2B-89557EB4DB88}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		.gitconfig = .gitconfig
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultWc3Data", "Infrastructure\DefaultWc3Data.csproj", "{7578E0AE-04DE-46D8-8A76-0F5EAB7480F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{7578E0AE-04DE-46D8-8A76-0F5EAB7480F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomWc3Data", "CustomWc3Data\CustomWc3Data.csproj", "{C990B624-8ECD-4336-81BE-800E5B135341}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +35,10 @@ Global
 		{7578E0AE-04DE-46D8-8A76-0F5EAB7480F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7578E0AE-04DE-46D8-8A76-0F5EAB7480F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7578E0AE-04DE-46D8-8A76-0F5EAB7480F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C990B624-8ECD-4336-81BE-800E5B135341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C990B624-8ECD-4336-81BE-800E5B135341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C990B624-8ECD-4336-81BE-800E5B135341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C990B624-8ECD-4336-81BE-800E5B135341}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,11 +1,13 @@
-﻿using Warcraft.Objects;
+﻿using Warcraft.Models;
 
-namespace Warcraft.Mapper;
+namespace Warcraft.Mappers;
 public static class MetaDataMapper
 {
-    public static List<MetaData> Map(List<MappedObject> data)
+    public static Dictionary<string, List<MetaData>> Map(List<MappedObject> data)
     {
-        return [.. data.SelectMany(MapObj)];
+        return data.SelectMany(MapObj)
+                   .GroupBy(metaData => metaData.Slk)
+                   .ToDictionary(group => group.Key, group => group.ToList());
     }
 
     private static List<MetaData> MapObj(MappedObject obj)
@@ -27,6 +29,25 @@ public static class MetaDataMapper
                 dataId = $"{dataId}{(char)('A' + dataIdInt - 1)}";
                 column = dataIdInt;
             }
+
+            /*
+            // unitmetadata contains item split into fake ItemData
+            if (dict.TryGetValue("useItem", out var isItem) && isItem == "1")
+            {
+                return
+                [
+                    new MetaData
+                    {
+                        Code = obj.Code,
+                        Field = dataId,
+                        Type = GetType(type),
+                        Column = column,
+                        AbilityId = [],
+                        Slk = "ItemData"
+                    }
+                ];
+            }
+            */
 
             // abilitymetadata has useSpecific field that contains all abilities that have this field
             var abilities = dict.TryGetValue("useSpecific", out var usedAbilities)

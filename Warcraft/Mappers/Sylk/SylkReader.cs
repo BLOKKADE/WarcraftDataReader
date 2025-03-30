@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Warcraft.Sylk;
+namespace Warcraft.Mappers.Sylk;
 
 public class SylkReader(Stream stream, Encoding encoding, bool leaveOpen = false) : IDisposable
 {
