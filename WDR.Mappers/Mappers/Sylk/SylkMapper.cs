@@ -1,6 +1,6 @@
-﻿using Warcraft.Models;
+﻿using WDR.Mappers.Models;
 
-namespace Warcraft.Mappers.Sylk;
+namespace WDR.Mappers.Mappers.Sylk;
 
 public static class SylkMapper
 {

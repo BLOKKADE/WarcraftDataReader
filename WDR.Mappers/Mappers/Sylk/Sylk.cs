@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Warcraft.Mappers.Sylk;
+namespace WDR.Mappers.Mappers.Sylk;
 public class Sylk
 {
     public static Sylk FromStreams(params Stream[] streams)

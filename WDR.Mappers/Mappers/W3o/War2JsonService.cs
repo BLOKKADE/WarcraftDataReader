@@ -1,6 +1,6 @@
-﻿using Warcraft.Models;
+﻿using WDR.Mappers.Models;
 
-namespace Warcraft.Mappers.W3o;
+namespace WDR.Mappers.Mappers.W3o;
 public static class War2JsonService
 {
     public static Wc3Data ProcessFile(string inputPath, ObjectType objectType)

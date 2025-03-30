@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
-using Warcraft.Mappers;
-using Warcraft.Mappers.Sylk;
-using Warcraft.Models;
-namespace Tests;
+using WDR.Mappers.Mappers;
+using WDR.Mappers.Mappers.Sylk;
+using WDR.Mappers.Models;
+namespace WDR.Tests;
 
 [TestClass]
 public sealed class Test1

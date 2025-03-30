@@ -1,6 +1,6 @@
-﻿using Warcraft.Models;
+﻿using WDR.Mappers.Models;
 
-namespace DefaultWc3Data;
+namespace WDR.Mergers;
 public static class ExtensionMethods
 {
     public static void MergeMappedObjects(this List<MappedObject> list, MappedObject newObject)

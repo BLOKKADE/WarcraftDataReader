@@ -1,4 +1,4 @@
-﻿namespace Warcraft.Models;
+﻿namespace WDR.Mappers.Models;
 public class MappedObject
 {
     public required string Code { get; set; }

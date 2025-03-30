@@ -1,4 +1,4 @@
-﻿namespace DefaultWc3Data;
+﻿namespace WDR.Mergers;
 public static class MetaDataHelper
 {
     private static readonly List<string> s_typeMappings =

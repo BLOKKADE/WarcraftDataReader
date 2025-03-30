@@ -1,6 +1,6 @@
-﻿using Warcraft.Mappers.W3o;
+﻿using WDR.Mappers.Mappers.W3o;
 
-namespace Tests;
+namespace WDR.Tests;
 
 [TestClass]
 public sealed class War2JsonTests

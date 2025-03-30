@@ -1,4 +1,4 @@
-﻿namespace Warcraft.Models;
+﻿namespace WDR.Mappers.Models;
 public class MetaData
 {
     // Code used in the world editor for example "Hbz2"

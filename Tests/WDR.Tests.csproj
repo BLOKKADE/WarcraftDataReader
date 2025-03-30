@@ -13,9 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CustomWc3Data\CustomWc3Data.csproj" />
-    <ProjectReference Include="..\Infrastructure\DefaultWc3Data.csproj" />
-    <ProjectReference Include="..\Warcraft\Warcraft.csproj" />
+    <ProjectReference Include="..\WDR.Mappers\WDR.Mappers.csproj" />
+    <ProjectReference Include="..\WDR.Mergers\WDR.Mergers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

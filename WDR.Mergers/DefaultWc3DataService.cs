@@ -1,8 +1,8 @@
-﻿using Warcraft.Mappers;
-using Warcraft.Mappers.Sylk;
-using Warcraft.Models;
+﻿using WDR.Mappers.Mappers;
+using WDR.Mappers.Mappers.Sylk;
+using WDR.Mappers.Models;
 
-namespace DefaultWc3Data;
+namespace WDR.Mergers;
 
 public class DefaultWc3DataService
 {

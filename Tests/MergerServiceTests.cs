@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
-using DefaultWc3Data;
-using Warcraft.Models;
+using WDR.Mappers.Models;
+using WDR.Mergers;
 
-namespace Tests;
+namespace WDR.Tests;
 [TestClass]
 public sealed class MergerServiceTests
 {

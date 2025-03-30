@@ -1,6 +1,6 @@
-﻿using Warcraft.Models;
+﻿using WDR.Mappers.Models;
 
-namespace Warcraft.Mappers.W3o;
+namespace WDR.Mappers.Mappers.W3o;
 
 public enum ObjectType
 {

@@ -1,6 +1,6 @@
-﻿using Warcraft.Models;
+﻿using WDR.Mappers.Models;
 
-namespace Warcraft.Mappers;
+namespace WDR.Mappers.Mappers;
 
 public static class WarcraftObjectMapper
 {

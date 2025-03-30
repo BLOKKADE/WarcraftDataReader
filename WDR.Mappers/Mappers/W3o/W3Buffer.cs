@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Warcraft.Mappers.W3o;
+namespace WDR.Mappers.Mappers.W3o;
 
 internal class W3Buffer(byte[] buffer)
 {

@@ -1,6 +1,6 @@
-﻿using Warcraft.Models;
+﻿using WDR.Mappers.Models;
 
-namespace CustomWc3Data;
+namespace WDR.Mergers;
 
 public static class CustomWc3DataMerger
 {

@@ -1,9 +1,8 @@
 ﻿using System.Text.Json;
-using CustomWc3Data;
-using DefaultWc3Data;
-using Warcraft.Mappers.W3o;
+using WDR.Mappers.Mappers.W3o;
+using WDR.Mergers;
 
-namespace Tests;
+namespace WDR.Tests;
 
 [TestClass]
 public sealed class CustomDataService
