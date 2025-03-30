@@ -2,7 +2,7 @@
 
 public class Warcraft3Object
 {
-    public required Dictionary<string, List<Warcraft3Field>> Original { get; set; }
+    public Dictionary<string, List<Warcraft3Field>> Original { get; set; } = [];
 }
 
 public class Warcraft3Field

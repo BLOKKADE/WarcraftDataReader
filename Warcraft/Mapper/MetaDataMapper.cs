@@ -1,26 +1,24 @@
-﻿using System.Dynamic;
-using Warcraft.Objects;
+﻿using Warcraft.Objects;
 
 namespace Warcraft.Mapper;
 public static class MetaDataMapper
 {
-    public static List<MetaData> Map(List<dynamic> data)
+    public static List<MetaData> Map(List<MappedObject> data)
     {
-        return [.. data.Cast<ExpandoObject>().SelectMany(MapObj)];
+        return [.. data.SelectMany(MapObj)];
     }
 
-    private static List<MetaData> MapObj(ExpandoObject obj)
+    private static List<MetaData> MapObj(MappedObject obj)
     {
-        IDictionary<string, object> dict = obj!;
+        var dict = obj.Fields;
         // Retrieve data from the dictionary and cast to string
-        if (dict.TryGetValue("field", out var fieldObj) && fieldObj is string dataId &&
-            dict.TryGetValue("ID", out var idObj) && idObj is string code &&
-            dict.TryGetValue("type", out var typeObj) && typeObj is string type &&
-            dict.TryGetValue("slk", out var slkObj) && slkObj is string slk)
+        if (dict.TryGetValue("field", out var dataId) &&
+            dict.TryGetValue("type", out var type) &&
+            dict.TryGetValue("slk", out var slk))
         {
             var column = 0;
             // Check if the field is "Data" and retrieve the "data" value from the dictionary
-            if (dataId == "Data" && dict.TryGetValue("data", out var dataIdObj) && dataIdObj is string dataIdStr &&
+            if (dataId == "Data" && dict.TryGetValue("data", out var dataIdStr) &&
                 // Try to parse the "data" value to an integer and ensure it is greater than or equal to 1
                 int.TryParse(dataIdStr, out var dataIdInt) && dataIdInt >= 1)
             {
@@ -31,13 +29,15 @@ public static class MetaDataMapper
             }
 
             // abilitymetadata has useSpecific field that contains all abilities that have this field
-            List<string> abilities = dict.TryGetValue("useSpecific", out var usedAbilities)
-                ? [.. ((string)usedAbilities).Split(',')]
+            var abilities = dict.TryGetValue("useSpecific", out var usedAbilities)
+                ? usedAbilities.Split(',').ToList()
                 : [];
 
-            return [
-                new () {
-                    Code = code,
+            return
+            [
+                new MetaData
+                {
+                    Code = obj.Code,
                     Field = dataId,
                     Type = GetType(type),
                     Column = column,

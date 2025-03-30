@@ -27,10 +27,7 @@ public static class WarcraftObjectMapper
             .GroupBy(m => m.Field)
             .ToDictionary(g => g.Key, g => g.ToList());
 
-        Warcraft3Object warcraft3Object = new()
-        {
-            Original = []
-        };
+        Warcraft3Object warcraft3Object = new();
 
         // Get the source identifier based on the source type
         var sourceIdentifier = GetSourceIdentifier(source);

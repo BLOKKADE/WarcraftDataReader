@@ -1,15 +1,15 @@
 ﻿using System.Text;
 
-namespace SylkReader;
+namespace Warcraft.Sylk;
 
 public class SylkReader(Stream stream, Encoding encoding, bool leaveOpen = false) : IDisposable
 {
-    private readonly StreamReader reader = new(stream, encoding ?? Encoding.Default, leaveOpen);
-    private bool disposedValue;
+    private readonly StreamReader _reader = new(stream, encoding ?? Encoding.Default, leaveOpen);
+    private bool _disposedValue;
 
     public Queue<string>? ReadRecords()
     {
-        var line = reader.ReadLine();
+        var line = _reader.ReadLine();
         if (line == null)
             return new Queue<string>();
 
@@ -35,14 +35,14 @@ public class SylkReader(Stream stream, Encoding encoding, bool leaveOpen = false
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!disposedValue)
+        if (!_disposedValue)
         {
             if (disposing)
             {
-                reader?.Dispose();
+                _reader?.Dispose();
             }
 
-            disposedValue = true;
+            _disposedValue = true;
         }
     }
 

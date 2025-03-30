@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace SylkReader;
+namespace Warcraft.Sylk;
 public class Sylk
 {
     public static Sylk FromStreams(params Stream[] streams)
@@ -43,11 +43,11 @@ public class Sylk
                     foreach (var record in records)
                     {
                         if (record.StartsWith('X'))
-                            x = Int32.Parse(record[1..]);
+                            x = int.Parse(record[1..]);
                         else if (record.StartsWith('Y'))
-                            y = Int32.Parse(record[1..]);
+                            y = int.Parse(record[1..]);
                         else if (record.StartsWith('K'))
-                            sylk.values[new Point(x, y)] = record[1..].Trim('"');
+                            sylk.Values[new Point(x, y)] = record[1..].Trim('"');
                         else
                             throw new InvalidOperationException("Unknown value:" + record);
                     }
@@ -62,13 +62,13 @@ public class Sylk
         return sylk;
     }
 
-    public readonly Dictionary<Point, string> values = [];
+    public readonly Dictionary<Point, string> Values = [];
 
     public void Merge(Sylk source)
     {
-        foreach (var keyValuePair in source.values)
+        foreach (var keyValuePair in source.Values)
         {
-            values[keyValuePair.Key] = keyValuePair.Value;
+            Values[keyValuePair.Key] = keyValuePair.Value;
         }
     }
 }
