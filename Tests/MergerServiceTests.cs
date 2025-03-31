@@ -1,16 +1,22 @@
 ﻿using System.Text.Json;
-using WDR.Mappers.Models;
 using WDR.Mergers;
 
 namespace WDR.Tests;
 [TestClass]
 public sealed class MergerServiceTests
 {
-    private readonly DefaultWc3DataService mergerService;
+    private readonly DataMergeService mergerService;
+    private readonly TxtDataReader txtReader;
+    private readonly MetaDataReader metaReader;
+    private readonly ObjectDataReader dataReader;
 
     public MergerServiceTests()
     {
-        mergerService = new DefaultWc3DataService();
+        var slkTypeList = new SlkFiles();
+        var txtReader = new TxtDataReader();
+        var metaReader = new MetaDataReader(slkTypeList);
+        var dataReader = new ObjectDataReader(slkTypeList);
+        var mergerService = new DataMergeService(txtReader, metaReader, dataReader);
     }
 
     [TestMethod]
@@ -18,21 +24,18 @@ public sealed class MergerServiceTests
     {
         var metaFiles = Directory.GetFiles("Data/Meta/", "*.slk");
 
-        Dictionary<string, List<MetaData>> allMetaData = [];
-
         foreach (var file in metaFiles)
         {
-            mergerService.ReadMetaData(file);
+            metaReader.ReadData(file);
         }
     }
 
     [TestMethod]
     public void TestTxtObjects()
     {
-        var txtFiles = Directory.GetFiles("Data/Text/", "*.txt");
-        foreach (var file in txtFiles)
+        foreach (var file in Directory.GetFiles("Data/Text/", "*.txt"))
         {
-            mergerService.ReadTxtObjects(file);
+            txtReader.ReadData(file);
         }
     }
 
@@ -40,10 +43,9 @@ public sealed class MergerServiceTests
     public void TestDataObject()
     {
         TestMetaData();
-        var txtFiles = Directory.GetFiles("Data/", "*.slk");
-        foreach (var file in txtFiles)
+        foreach (var file in Directory.GetFiles("Data/", "*.slk"))
         {
-            mergerService.ReadData(file);
+            dataReader.ReadData(file);
         }
     }
 
@@ -53,7 +55,7 @@ public sealed class MergerServiceTests
         TestTxtObjects();
         TestDataObject();
 
-        var mergedObject = mergerService.MergeObjects();
+        var mergedObject = mergerService.MergeData();
 
         // Convert to json
         File.WriteAllText("Data/Everything.json", JsonSerializer.Serialize(mergedObject));

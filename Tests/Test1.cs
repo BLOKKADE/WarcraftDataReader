@@ -14,6 +14,22 @@ public sealed class Test1
     }
 
     [TestMethod]
+    public void TestStrings2()
+    {
+        var input = File.ReadAllText("Data/war3map.wts");
+        var result = WtsMapper.MapFromString(input);
+
+        //check for missing numbers
+        for (var i = 0; i < result.Count; i++)
+        {
+            if (!result.ContainsKey(i))
+            {
+                Console.WriteLine($"Missing key: {i}");
+            }
+        }
+    }
+
+    [TestMethod]
     public void TestAbilities()
     {
         using Stream abilityData = File.OpenRead("Data/AbilityData.slk");

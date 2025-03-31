@@ -64,11 +64,11 @@ public static class ObjectFileReader
 
                         if (modification.Type == "int")
                         {
-                            modification.Value = outBufferToJSON.ReadInt();
+                            modification.Value = outBufferToJSON.ReadInt().ToString();
                         }
                         else if (modification.Type == "real" || modification.Type == "unreal")
                         {
-                            modification.Value = outBufferToJSON.ReadFloat();
+                            modification.Value = outBufferToJSON.ReadFloat().ToString();
                         }
                         else
                         {

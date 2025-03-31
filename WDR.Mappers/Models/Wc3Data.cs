@@ -16,7 +16,7 @@ public class Warcraft3Field
 {
     public required string Id { get; set; }
     public required string Type { get; set; }
-    public object? Value { get; set; }
+    public string? Value { get; set; }
     public string? FieldName { get; set; }
     public int? Column { get; set; }
     public int? Level { get; set; }

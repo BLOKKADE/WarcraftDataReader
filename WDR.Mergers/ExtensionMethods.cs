@@ -35,22 +35,25 @@ public static class ExtensionMethods
     {
         foreach (var sourceObj in source.Original)
         {
-            var targetObj = target.Original.FirstOrDefault(x => x.Code == sourceObj.Code);
-
-            if (targetObj != null)
+            if (sourceObj.Code != "-")
             {
-                foreach (var sourceField in sourceObj.Fields)
+                var targetObj = target.Original.FirstOrDefault(x => x.Code == sourceObj.Code);
+
+                if (targetObj != null)
                 {
-                    var targetField = targetObj.Fields.FirstOrDefault(x => x.Id == sourceField.Id);
-                    if (targetField == null)
+                    foreach (var sourceField in sourceObj.Fields)
                     {
-                        targetObj.Fields.Add(sourceField);
+                        var targetField = targetObj.Fields.FirstOrDefault(x => x.Id == sourceField.Id);
+                        if (targetField == null)
+                        {
+                            targetObj.Fields.Add(sourceField);
+                        }
                     }
                 }
-            }
-            else
-            {
-                target.Original.Add(sourceObj);
+                else
+                {
+                    target.Original.Add(sourceObj);
+                }
             }
         }
     }
