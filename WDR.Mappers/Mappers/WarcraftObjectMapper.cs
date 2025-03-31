@@ -57,16 +57,43 @@ public static class WarcraftObjectMapper
                     // Use the first metadata field if none was found
                     metaField ??= metaFields[0];
 
-                    Warcraft3Field warcraft3Field = new()
+                    //exception for ability level text which is stored in a single field 😩
+                    if (fieldName == "Tip" || fieldName == "Ubertip")
                     {
-                        Id = metaField.Code,
-                        Type = metaField.Type,
-                        Value = fieldValue,
-                        Column = metaField.Column,
-                        Level = level,
-                        FieldName = fieldName
-                    };
-                    wc3Obj.Fields.Add(warcraft3Field);
+                        var splitValues = fieldValue.Split("\",\"");
+
+                        if (fieldName == "Tip" && splitValues.Length == 1)
+                        {
+                            splitValues = fieldValue.Split(',');
+                        }
+
+                        for (var i = 0; i < splitValues.Length; i++)
+                        {
+                            Warcraft3Field warcraft3Field = new()
+                            {
+                                Id = metaField.Code,
+                                Type = metaField.Type,
+                                Value = splitValues[i].Replace("\"", ""),
+                                Column = metaField.Column,
+                                Level = i + 1,
+                                FieldName = fieldName
+                            };
+                            wc3Obj.Fields.Add(warcraft3Field);
+                        }
+                    }
+                    else
+                    {
+                        Warcraft3Field warcraft3Field = new()
+                        {
+                            Id = metaField.Code,
+                            Type = metaField.Type,
+                            Value = fieldValue,
+                            Column = metaField.Column,
+                            Level = level,
+                            FieldName = fieldName
+                        };
+                        wc3Obj.Fields.Add(warcraft3Field);
+                    }
                 }
             }
 

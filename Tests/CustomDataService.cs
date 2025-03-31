@@ -3,6 +3,8 @@ using WDR.Mappers.Mappers;
 using WDR.Mappers.Mappers.W3o;
 using WDR.Mappers.Models;
 using WDR.Mergers;
+using WDR.Mergers.Mergers;
+using WDR.Mergers.Readers;
 
 namespace WDR.Tests;
 
@@ -12,16 +14,75 @@ public sealed class CustomDataService
     [TestMethod]
     public void TestCustomData()
     {
-        var customAbilityData = ObjectFileReader.FromBuffer(File.ReadAllBytes("Data/war3map.w3a"), ObjectType.Abilities);
-        var customAbilitySkinData = ObjectFileReader.FromBuffer(File.ReadAllBytes("Data/war3mapSkin.w3a"), ObjectType.Abilities);
+        CreateFiles("w3a", ObjectType.Abilities);
+        CreateFiles("w3u", ObjectType.Units);
+        CreateFiles("w3t", ObjectType.Items);
+    }
 
-        ReplaceStrings.ReplaceString(customAbilitySkinData, WtsMapper.MapFromString(File.ReadAllText("Data/war3map.wts")));
+    private static void CreateFiles(string ending, ObjectType objectType)
+    {
+        var customAbilityData = ObjectFileReader.FromBuffer(File.ReadAllBytes($"Data/w3o/war3map.{ending}"), objectType);
+        var customAbilitySkinData = ObjectFileReader.FromBuffer(File.ReadAllBytes($"Data/w3o/war3mapSkin.{ending}"), objectType);
+
+        ReplaceStrings.ReplaceString(customAbilitySkinData, WtsMapper.MapFromString(File.ReadAllText("Data/w3o/war3map.wts")));
 
         var customDataMerger = new CustomWc3DataMerger(customAbilityData);
 
         customDataMerger.Expand(customAbilitySkinData);
 
-        File.WriteAllText("Data/ExpandedCustomData.json", JsonSerializer.Serialize(GroupByLevel(customDataMerger.Wc3Data)));
+        var filteredData = customDataMerger.Wc3Data.Custom.Select(obj => new
+        {
+            obj.Code,
+            FieldsByLevel = obj.Fields
+                .GroupBy(f => f.Level ?? 0) // Use 0 as default value for null levels
+                .OrderBy(g => g.Key) // Group by level in ascending order
+                .ToDictionary(g => g.Key, g => g.Select(f => new { f.Id, f.Value }).ToList()) // Select only id and value
+        });
+
+        File.WriteAllText($"Data/{ending}.json", JsonSerializer.Serialize(filteredData, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    [TestMethod]
+    public void TestExpandCustomWithDefaultData()
+    {
+        var slkTypeList = new SlkFiles();
+        var txtReader = new TxtDataReader();
+        var metaReader = new MetaDataReader(slkTypeList);
+        var dataReader = new ObjectDataReader(slkTypeList);
+        var mergerService = new ObjectWc3DataMerger(txtReader, metaReader, dataReader);
+
+        foreach (var file in Directory.GetFiles("Data/Text/", "*ability*.txt"))
+        {
+            txtReader.ReadData(file);
+        }
+
+        foreach (var file in Directory.GetFiles("Data/Meta/", "AbilityMetaData.slk"))
+        {
+            metaReader.ReadData(file);
+        }
+
+        foreach (var file in Directory.GetFiles("Data/", "AbilityData.slk"))
+        {
+            dataReader.ReadData(file);
+        }
+
+        var defaultData = mergerService.MergeData();
+
+        var customAbilityData = ObjectFileReader.FromBuffer(File.ReadAllBytes("Data/w3o/war3map.w3a"), ObjectType.Abilities);
+        var customAbilitySkinData = ObjectFileReader.FromBuffer(File.ReadAllBytes("Data/w3o/war3mapSkin.w3a"), ObjectType.Abilities);
+
+        ReplaceStrings.ReplaceString(customAbilitySkinData, WtsMapper.MapFromString(File.ReadAllText("Data/w3o/war3map.wts")));
+
+        var customDataMerger = new CustomWc3DataMerger(customAbilityData);
+
+        customDataMerger.Expand(customAbilitySkinData);
+
+        var defaultWc3DataMerger = new DefaultWc3DataMerger(customDataMerger.Wc3Data);
+
+        defaultWc3DataMerger.Expand(defaultData);
+
+        //save to json file
+        File.WriteAllText("Data/ExpandedCustomData.json", JsonSerializer.Serialize(GroupByLevel(defaultWc3DataMerger.Wc3Data)));
     }
 
     [TestMethod]
@@ -31,7 +92,7 @@ public sealed class CustomDataService
         var txtReader = new TxtDataReader();
         var metaReader = new MetaDataReader(slkTypeList);
         var dataReader = new ObjectDataReader(slkTypeList);
-        var mergerService = new DataMergeService(txtReader, metaReader, dataReader);
+        var mergerService = new ObjectWc3DataMerger(txtReader, metaReader, dataReader);
 
         foreach (var file in Directory.GetFiles("Data/Text/", "*ability*.txt"))
         {

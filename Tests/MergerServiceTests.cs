@@ -1,11 +1,12 @@
 ﻿using System.Text.Json;
-using WDR.Mergers;
+using WDR.Mergers.Mergers;
+using WDR.Mergers.Readers;
 
 namespace WDR.Tests;
 [TestClass]
 public sealed class MergerServiceTests
 {
-    private readonly DataMergeService mergerService;
+    private readonly ObjectWc3DataMerger mergerService;
     private readonly TxtDataReader txtReader;
     private readonly MetaDataReader metaReader;
     private readonly ObjectDataReader dataReader;
@@ -13,10 +14,10 @@ public sealed class MergerServiceTests
     public MergerServiceTests()
     {
         var slkTypeList = new SlkFiles();
-        var txtReader = new TxtDataReader();
-        var metaReader = new MetaDataReader(slkTypeList);
-        var dataReader = new ObjectDataReader(slkTypeList);
-        var mergerService = new DataMergeService(txtReader, metaReader, dataReader);
+        txtReader = new TxtDataReader();
+        metaReader = new MetaDataReader(slkTypeList);
+        dataReader = new ObjectDataReader(slkTypeList);
+        mergerService = new ObjectWc3DataMerger(txtReader, metaReader, dataReader);
     }
 
     [TestMethod]
